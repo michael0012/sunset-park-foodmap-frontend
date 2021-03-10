@@ -1,0 +1,17 @@
+{
+    "/": "/es/",
+    "/login": "/es/login",
+    "/signup": "/es/signup",
+    "/foodmap": "/es/foodmap",
+    "404-error": "No parece haber nada aquí...",
+    "Sunset Park Food Map": "Mapa de Comida de Sunset Park",
+    "Search Food Map": "Busca en la Mapa de Comida",
+    "Language": "Idioma",
+    "Welcome to React": "Bienvenido a React y react-i18next",
+    "Welcome to Other thing...": "Bienvenido a Otra cosa ...",
+    "Next Page": "Siguiente página",
+    "/otherthing": "/es/otherthing",
+    "Multilingual React App": "Aplicación React multilingüe",
+    "description": "descripción",
+    "This is a Multilingual website using react-dom-router, react-redux and i18n": "Este es un sitio web multilingüe que utiliza react-dom-router, react-redux e i18n"
+  }

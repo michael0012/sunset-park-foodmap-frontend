@@ -1,0 +1,41 @@
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.leaflet-control-zoom{
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+}
+
+.leaflet-popup-close-button {
+  display: none; 
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  position: absolute;
+  pointer-events: none;
+  border: none;
+  background: none;
+  content: "";
+}
+.leaflet-tooltip-top,
+.leaflet-tooltip-bottom,
+.leaflet-tooltip-left,
+.leaflet-tooltip-right {
+  background: none;
+}
+.leaflet-tooltip{
+  background: none;
+  border: none;
+  box-shadow: none;
+  font-weight: bold;
+  font-size: 12px;
+  margin-left: -3px;
+  margin-top: -8px;
+}

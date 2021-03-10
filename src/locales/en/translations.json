@@ -1,0 +1,15 @@
+{
+    "/": "/en/",
+    "/signup": "/en/signup",
+    "/login": "/en/login",
+    "/foodmap": "/en/foodmap",
+    "404-error": "There doesn't seem to be anything here...",
+    "Language": "Language",
+    "Welcome to React": "Welcome to React and react-i18next",
+    "Welcome to Other thing...": "Welcome to Other thing...",
+    "Next Page": "Next Page",
+    "/otherthing": "/en/otherthing",
+    "Multilingual React App":"Multilingual React App",
+    "description": "description",
+    "This is a Multilingual website using react-dom-router, react-redux and i18n":"This is a Multilingual website using react-dom-router, react-redux and i18n"
+}

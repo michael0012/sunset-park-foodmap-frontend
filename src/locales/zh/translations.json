@@ -1,0 +1,16 @@
+{
+    "/": "/zh/",
+    "/signup": "/zh/signup",
+    "/login": "/zh/login",
+    "/foodmap": "/zh/foodmap",
+    "404-error": "这里似乎什么都没有...",
+    "Sunset Park Food Map": "日落公园美食地图",
+    "Language": "语言",
+    "Welcome to React": "欢迎来到React",
+    "Welcome to Other thing...": "欢迎来到其他事物...",
+    "Next Page": "下一页",
+    "/otherthing": "/zh/otherthing",
+    "Multilingual React App": "多语言React应用",
+    "description":"描述",
+    "This is a Multilingual website using react-dom-router, react-redux and i18n":"这是一个使用react-dom-router，react-redux和i18n的多语言网站"
+  }
