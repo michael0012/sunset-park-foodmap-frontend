@@ -3,6 +3,7 @@
     "/login": "/es/login",
     "/signup": "/es/signup",
     "/foodmap": "/es/foodmap",
+    "/control-panel": "/es/control-panel",
     "404-error": "No parece haber nada aquí...",
     "Sunset Park Food Map": "Mapa de Comida de Sunset Park",
     "Search Food Map": "Busca en la Mapa de Comida",

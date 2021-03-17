@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) =>({
 const AddRestaurantForm = (props) => {
     const classes = useStyles();
     const { t } = useTranslation();
+    const [ fileName, setFileName ] = useState(null);
     return (
         <Grid container justify="center" className={classes.largeContainer} >
             <Container maxWidth="md">
@@ -93,6 +94,7 @@ const AddRestaurantForm = (props) => {
                                         onChange={async (event) => {
                                            let imageStringArray = [null];
                                             try{
+                                                setFileName(event.target.files[0].name);
                                                 imageStringArray = await fileListToBase64(event.target.files);
                                             }catch(error){
                                                 
@@ -101,6 +103,9 @@ const AddRestaurantForm = (props) => {
                                         }}
                                     />
                                     </Button>
+                                    {
+                                        fileName && <p>{fileName}</p>
+                                    }
                                 </AddErrors>
                                 </div>
                                 <div>

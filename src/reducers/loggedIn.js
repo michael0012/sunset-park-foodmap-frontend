@@ -11,10 +11,7 @@ export const loggedIn = (state = initialState, action) => {
             return {
                 ...state,
                 loggedIn: true,
-                user: {
-                    email: action.email,
-                    admin: action.admin,
-                }
+                user: action.user
             };
         case LOGOUT:
             return {

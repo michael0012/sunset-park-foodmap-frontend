@@ -25,8 +25,8 @@ const HoverLocationInfo = (props) => {
     const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const currentDay = moment().day();
     const currentDayString = daysOfWeek[currentDay];
-    const openDateTime = props.location[`${currentDayString}_open`] === null? null: moment(props.location[`${currentDayString}_open`]);
-    const closeDateTime = props.location[`${currentDayString}_close`] === null? null: moment(props.location[`${currentDayString}_close`]);
+    const openDateTime = props.location[`${currentDayString}_open`] === null? null: moment("1970-01-01T"+props.location[`${currentDayString}_open`]);
+    const closeDateTime = props.location[`${currentDayString}_close`] === null? null: moment("1970-01-01T"+props.location[`${currentDayString}_close`]);
     const checkOpen = () => {
         if(props.location[`${currentDayString}_open`] === null){
             return false;

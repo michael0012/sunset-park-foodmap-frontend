@@ -4,6 +4,7 @@ import i18n from './i18n';
 import { getCookie } from './utils';
 import { connect } from 'react-redux';
 import LoadingScreen from './screens/LoadingScreen';
+import AdminRoutes from './AdminRoutes';
 import LoggedInRoutes from './LoggedInRoutes';
 import LoggedOutRoutes from './LoggedOutRoutes';
 import { LOGIN, LOGOUT } from './reducers/loggedIn';
@@ -13,8 +14,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
       logIn: (user) =>  dispatch({
           type: LOGIN,
-          email: user.email,
-          admin: user.admin,
+          user: user
       }),
       logOut: () => dispatch({
         type: LOGOUT,
@@ -41,6 +41,7 @@ class App extends React.Component {
     const csrftoken = getCookie("csrftoken") || "";
     try{
       const response = await axios.post('/auth/me', {}, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
+      
       if( response.data.loggedIn){
         this.props.logIn(response.data.user);
         user = response.data.user;
@@ -61,7 +62,14 @@ class App extends React.Component {
     if(this.state.loading)
       return <LoadingScreen/>;
     
-    const Routing = this.props.loggedIn ? LoggedInRoutes : LoggedOutRoutes;
+    let Routing;
+    if(!this.props.loggedIn){
+      Routing = LoggedOutRoutes;
+    }else if(this.props.user.admin){
+      Routing = AdminRoutes;
+    }else{
+      Routing = LoggedInRoutes;
+    }
     return (
       <Router>
         <Switch>
@@ -73,6 +81,6 @@ class App extends React.Component {
 
 }
 
-const mapStateToProps = state => ({ loggedIn: state.loggedIn.loggedIn })
+const mapStateToProps = state => ({ loggedIn: state.loggedIn.loggedIn, user: state.loggedIn.user })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

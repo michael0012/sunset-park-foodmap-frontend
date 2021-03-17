@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import MapBaseScreen from './MapBaseScreen';
-import { getCookie } from '../utils';
+import { getCookie, camelToSnake } from '../utils';
+import moment from 'moment';
 import axios from '../api';
 import i18n from '../i18n';
 import MapSearchBar from '../components/MapSearchBar';
 import HoverLocationInfo from '../components/HoverLocationInfo';
+import MapFilterBar from '../components/MapFilterBar';
+import LocationMarker from '../components/LocationMarker';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -27,10 +30,20 @@ const MapScreen = (props) => {
     const [state, setState] = useState({
         zoom: 15,
         center: [40.647568, -74.004103],
+        locate: "begin",
         locations: null,
         next: null,
         searched: false,
         paramsObject: {},
+        queryFiltersFlags: {
+            openCurrently: false,
+            indoorDining: false,
+            outdoorDining: false,
+            takeout: false,
+            restaurant: false,
+            cashOnly: false,
+            acceptsCredit: false,
+        }
     });
     useEffect(() => {
         const getFoodLocations = async () => {
@@ -52,13 +65,54 @@ const MapScreen = (props) => {
         };
         getFoodLocations();
     }, []);
+    const clickLocateIcon = (value) => {
+        setState({
+            ...state,
+            locate: value
+        });
+    }; 
     const submitSearch = (keyQuery) => (async (value) => {
-        
-        if(value || state.searched){
-            if(!value){
+        if((value || keyQuery !== 'search') || state.searched){
+            if(!value && keyQuery === 'search'){
                 delete state.paramsObject[keyQuery];
-            }else{
+            }else if(keyQuery === 'search'){
                 state.paramsObject[keyQuery] = value;
+            }
+            if(keyQuery === 'openCurrently'){
+                const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                const momentTimeObject = moment(Date.now()).utcOffset('-0500');
+                const currentDay = momentTimeObject.day();
+                const currentDayString = daysOfWeek[currentDay];
+                const currentTime  = momentTimeObject.format('HH:mm')+":00";
+                const timeLess = `${currentDayString}_open__lte`;
+                const timeMore = `${currentDayString}_close__gte`;
+                if(value){
+                    state.paramsObject[timeLess] = currentTime;
+                    state.paramsObject[timeMore] = currentTime;
+                }else{
+                    delete state.paramsObject[timeLess];
+                    delete state.paramsObject[timeMore];
+                }
+            } 
+            if(['indoorDining', 'outdoorDining', 'takeout', 'restaurant', 'cashOnly', 'acceptsCredit'].includes(keyQuery) ){
+                
+                if(keyQuery === 'cashOnly' || keyQuery === 'acceptsCredit'){
+                    if(keyQuery === 'cashOnly' &&  value){
+                        state.paramsObject['cash_only'] = 'True';
+                    } else if(keyQuery === 'cashOnly'){
+                        delete state.paramsObject['cash_only'];
+                    }
+                    if(keyQuery === 'acceptsCredit' &&  value){
+                        state.paramsObject['cash_only'] = 'False';
+                    } else if(keyQuery === 'acceptsCredit'){
+                        delete state.paramsObject['cash_only'];
+                    }
+                }
+                else if(value){
+                    state.paramsObject[camelToSnake(keyQuery)] = 'True';
+                }else{
+                    delete state.paramsObject[camelToSnake(keyQuery)];
+                }
             }
             const csrftoken = getCookie("csrftoken") || "";
             try{
@@ -78,9 +132,41 @@ const MapScreen = (props) => {
             }
         }
     });
+    const filterClick = (filterValue) => (async ()=> {
+        const passingFlag = state.queryFiltersFlags[filterValue];
+        await submitSearch(filterValue)(!passingFlag);
+        if(filterValue === 'cashOnly' && !passingFlag && state.queryFiltersFlags['acceptsCredit']){
+            setState(state => ({
+                ...state,
+                queryFiltersFlags:{
+                    ...state.queryFiltersFlags,
+                    [filterValue]: !state.queryFiltersFlags[filterValue],
+                    acceptsCredit: false,
+                }
+            }));
+        } else if(filterValue === 'acceptsCredit' && !passingFlag && state.queryFiltersFlags['cashOnly']){
+            setState(state => ({
+                ...state,
+                queryFiltersFlags:{
+                    ...state.queryFiltersFlags,
+                    [filterValue]: !state.queryFiltersFlags[filterValue],
+                    cashOnly: false,
+                }
+            }));
+        }else{
+            setState(state => ({
+                ...state,
+                queryFiltersFlags:{
+                    ...state.queryFiltersFlags,
+                    [filterValue]: !state.queryFiltersFlags[filterValue]
+                }
+            }));
+        }
+    });
     return (
         <MapBaseScreen>
-            <MapSearchBar onSubmit={submitSearch('search')}/>
+            <MapSearchBar onSubmit={submitSearch('search')} clickLocateIcon={clickLocateIcon}/>
+            <MapFilterBar filterClick={filterClick} queryFiltersFlags={state.queryFiltersFlags} />
             <MapContainer center={state.center} zoom={state.zoom} scrollWheelZoom={true} style={{height: "100vh", width: "100%", zIndex:0}}>
                 <TileLayer
                 attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -137,6 +223,7 @@ const MapScreen = (props) => {
                     )
                     
                 }
+                <LocationMarker locate={state.locate} clickLocateIcon={clickLocateIcon}/>
             </MapContainer>
         </MapBaseScreen>
     );

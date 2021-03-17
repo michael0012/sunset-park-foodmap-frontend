@@ -46,5 +46,8 @@ export async function fileListToBase64(fileList) {
   
     // array with base64 strings
     return await Promise.all(promises)
-  }  
+  };
  
+export const camelToSnake = (camelString) => {
+  return camelString.replace(/[A-Z]/g, function(s){ return "_" + s.toLowerCase(); })
+};

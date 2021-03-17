@@ -13,8 +13,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         login: (user) =>  dispatch({
             type: LOGIN,
-            email: user.email,
-            admin: user.admin
+            user: user
         }),
     };
   }

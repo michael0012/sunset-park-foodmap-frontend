@@ -125,15 +125,17 @@ const AddRestaurantScreen = (props) => {
 			if(valuesCopy.phone_number){
 				valuesCopy['phone_number'] = valuesCopy['phone_number'].replace('-','').replace(' ', '').replace('(','').replace(')','');
 			}
+			/*
 			const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 			for(let i=0; i< daysOfWeek.length; i++){
 				if(valuesCopy[`${daysOfWeek[i]}_open`]){
-					valuesCopy[`${daysOfWeek[i]}_open`] = moment("1970-01-01T"+valuesCopy[`${daysOfWeek[i]}_open`]).toISOString();
+					valuesCopy[`${daysOfWeek[i]}_open`] = valuesCopy[`${daysOfWeek[i]}_open`];
 				}
 				if(valuesCopy[`${daysOfWeek[i]}_close`]){
-					valuesCopy[`${daysOfWeek[i]}_close`] = moment("1970-01-01T"+valuesCopy[`${daysOfWeek[i]}_close`]).toISOString();
+					valuesCopy[`${daysOfWeek[i]}_close`] = valuesCopy[`${daysOfWeek[i]}_close`];
 				}
 			}
+			*/
             const csrftoken = getCookie("csrftoken") || "";
             //const response = 
 			await axios.post('/api/v0/foodlocations/', valuesCopy, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});

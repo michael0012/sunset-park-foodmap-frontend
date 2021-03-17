@@ -7,13 +7,14 @@ import { LOGOUT } from '../reducers/loggedIn';
 import { getCookie } from '../utils';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import Drawer from '@material-ui/core/Drawer';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountOutlined';
 import RoomOutlinedIcon from '@material-ui/icons/RoomOutlined';
 
 
@@ -43,6 +44,7 @@ let NavDrawer = (props) => {
       history.push(t(routeString));
       props.toggleDrawer(e);
     });
+    const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
     const logOut = async () =>{
       try{
         const csrftoken = getCookie("csrftoken") || "";
@@ -58,10 +60,14 @@ let NavDrawer = (props) => {
 
       return (
         <React.Fragment>
-          <Drawer
+          <SwipeableDrawer
             anchor="left"
             open={props.openDrawer}
             onClose={props.toggleDrawer}
+            onOpen={props.toggleDrawer}
+            disableSwipeToOpen={true}
+            disableBackdropTransition={!iOS}
+            disableDiscovery={iOS}
           >
             <div className={classes.toolbar} />
             <Divider/>
@@ -71,22 +77,35 @@ let NavDrawer = (props) => {
                   <ListItemIcon><RoomOutlinedIcon /></ListItemIcon>
                   <ListItemText primary={"Map"} />
                 </ListItem>
+                {
+                  props.user.admin &&
+                  (
+                    <ListItem button onClick={() => {history.push(t('/control-panel'))}}>
+                      <ListItemIcon><SupervisorAccountOutlinedIcon /></ListItemIcon>
+                      <ListItemText primary={t("Admin Panel")} />
+                    </ListItem>
+                  )
+                }
                 <ListItem button onClick={logOut}>
                   <ListItemIcon><AccountCircleOutlinedIcon /></ListItemIcon>
                   <ListItemText primary={t("Log Out")} />
                 </ListItem>
               </List>
             </div>
-          </Drawer>
+          </SwipeableDrawer>
         </React.Fragment>
       );
     } else{
       return (
         <React.Fragment>
-          <Drawer
+          <SwipeableDrawer
             anchor="left"
             open={props.openDrawer}
             onClose={props.toggleDrawer}
+            onOpen={props.toggleDrawer}
+            disableSwipeToOpen={true}
+            disableBackdropTransition={!iOS} 
+            disableDiscovery={iOS}
           >
             <div className={classes.toolbar} />
             <Divider/>
@@ -102,12 +121,12 @@ let NavDrawer = (props) => {
                 </ListItem>
               </List>
             </div>
-          </Drawer>
+          </SwipeableDrawer>
         </React.Fragment>
       );
     }
 };
 
-const mapStateToProps = state => ({ loggedIn: state.loggedIn.loggedIn });
+const mapStateToProps = state => ({ loggedIn: state.loggedIn.loggedIn, user: state.loggedIn.user });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavDrawer);

@@ -63,7 +63,7 @@ let NavBar = (props) => {
         return;
       }
   
-      setState({ ...state, openDrawer: false});
+      setState(state => ({ ...state, openDrawer: !state.openDrawer}));
     };
 
     return (

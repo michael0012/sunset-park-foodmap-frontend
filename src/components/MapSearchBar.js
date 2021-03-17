@@ -92,12 +92,14 @@ const MapScreenBar = (props) => {
           <Divider className={classes.divider} orientation="vertical" />
           {
             (!state.submitted &&(
-              <IconButton color="primary" className={classes.iconButton} aria-label={t("location")}>
-                {
-                  (!state.loading && <GpsFixedOutlinedIcon /> ) ||
+                (!state.loading && (
+                <IconButton color="primary" className={classes.iconButton} aria-label={t("location")} onClick={() => {props.clickLocateIcon("start")}}>
+                  <GpsFixedOutlinedIcon /> 
+                </IconButton>
+                ) ) ||
+                (
                   <CircularProgress style={{width: "22px", height: "22px"}}/>
-                }
-              </IconButton>
+                )
             ) )|| (
               <IconButton color="primary" className={classes.iconButton} aria-label={t("clear search")} onClick={clearSearch(props.onSubmit)}>
                 <CloseOutlinedIcon/>

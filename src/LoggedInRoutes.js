@@ -6,8 +6,6 @@ import SelectLang from './components/SelectLang';
 import { SET_LANG } from './reducers/language';
 import NotFound from './screens/NotFound';
 import MapScreen from './screens/MapScreen';
-import AddRestaurantScreen from './screens/AddRestaurantScreen';
-
 
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -43,8 +41,8 @@ let LoggedInRoutes = (props) => {
       <React.Fragment>
         {state.selectingLang && <SelectLang/>}
         <Switch>
-          <Route exact path="/" component={AddRestaurantScreen}/>
-          <Route exact path="/:lang([a-z]{2})/" component={AddRestaurantScreen}/>
+          <Route exact path="/" component={MapScreen}/>
+          <Route exact path="/:lang([a-z]{2})/" component={MapScreen}/>
           {
               // the two routes above should have the same component
               // the routes below must have paths that start with /:lang([a-z]{2})/ inorder for template to work.

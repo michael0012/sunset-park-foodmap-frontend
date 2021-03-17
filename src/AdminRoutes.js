@@ -6,8 +6,8 @@ import SelectLang from './components/SelectLang';
 import { SET_LANG } from './reducers/language';
 import NotFound from './screens/NotFound';
 import MapScreen from './screens/MapScreen';
-import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
+import AdminScreen from './screens/AdminScreen';
+import AddRestaurantScreen from './screens/AddRestaurantScreen';
 
 
 
@@ -18,10 +18,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           language: lang,
       }),
   };
-};
+}
 
 
-let LoggedOutRoutes = (props) => {
+let AdminRoutes = (props) => {
     const location = useLocation();
     const lang = location.pathname.split('/')[1];
     const [state, setState] = useState({selectingLang: false,});
@@ -39,7 +39,7 @@ let LoggedOutRoutes = (props) => {
       }
       
     },[props, lang]);
-
+  
     return (
       <React.Fragment>
         {state.selectingLang && <SelectLang/>}
@@ -51,8 +51,8 @@ let LoggedOutRoutes = (props) => {
               // the routes below must have paths that start with /:lang([a-z]{2})/ inorder for template to work.
           }
           <Route exact path="/:lang([a-z]{2})/foodmap" component={MapScreen} />
-          <Route exact path="/:lang([a-z]{2})/login" component={LoginScreen}/>
-          <Route exact path="/:lang([a-z]{2})/signup" component={RegisterScreen} />
+          <Route exact path="/:lang([a-z]{2})/control-panel" component={AdminScreen} />
+          <Route exact path="/:lang([a-z]{2})/foodlocations/add" component={AddRestaurantScreen} />
           {
             // 404 error page below
           }
@@ -62,6 +62,6 @@ let LoggedOutRoutes = (props) => {
     );
     
   };
-  const mapStateToProps = state => ({ language: state.language.language, selected: state.language.selected });
+  const mapStateToProps = state => ({ language: state.language.language, selected: state.language.selected })
   
-export default connect(mapStateToProps, mapDispatchToProps)(LoggedOutRoutes);
+  export default connect(mapStateToProps, mapDispatchToProps)(AdminRoutes);

@@ -3,6 +3,7 @@
     "/signup": "/en/signup",
     "/login": "/en/login",
     "/foodmap": "/en/foodmap",
+    "/control-panel": "/en/control-panel",
     "404-error": "There doesn't seem to be anything here...",
     "Language": "Language",
     "Welcome to React": "Welcome to React and react-i18next",
