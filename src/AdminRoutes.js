@@ -7,7 +7,6 @@ import { SET_LANG } from './reducers/language';
 import NotFound from './screens/NotFound';
 import MapScreen from './screens/MapScreen';
 import AdminScreen from './screens/AdminScreen';
-import AddRestaurantScreen from './screens/AddRestaurantScreen';
 
 
 
@@ -52,7 +51,6 @@ let AdminRoutes = (props) => {
           }
           <Route exact path="/:lang([a-z]{2})/foodmap" component={MapScreen} />
           <Route exact path="/:lang([a-z]{2})/control-panel" component={AdminScreen} />
-          <Route exact path="/:lang([a-z]{2})/foodlocations/add" component={AddRestaurantScreen} />
           {
             // 404 error page below
           }

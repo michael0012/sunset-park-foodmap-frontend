@@ -62,9 +62,9 @@ const CategoriesForm = (props) => {
                 <Container maxWidth="md">
                     <Paper id="formModal" depth={3} className={classes.paper}>
                         <div style={{marginBottom: "11px"}}>
-                        <IconButton style={{color: "black", float: "right", marginTop: "-18px"}} aria-label="close" onClick={()=>{props.closeModal('categoriesModal');}}>
-                            <CloseOutlinedIcon/>
-                        </IconButton>
+                            <IconButton style={{color: "black", float: "right", marginTop: "-18px"}} aria-label="close" onClick={()=>{props.closeModal('categoriesModal');}}>
+                                <CloseOutlinedIcon/>
+                            </IconButton>
                         </div>
                         <Box className={classes.titleHolder}>
                             <Typography variant="h5" className={classes.title}>{props.title}</Typography>

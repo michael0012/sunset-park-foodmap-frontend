@@ -55,7 +55,7 @@ const RegisterScreen = (props) => {
         try{
             formikBag.setSubmitting(true);
             const csrftoken = getCookie("csrftoken") || "";
-            const response = await axios.post('/auth/signup', values, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
+            await axios.post('/auth/signup', values, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
             setState({...state, success: true});
 		} catch(error){
 			/*

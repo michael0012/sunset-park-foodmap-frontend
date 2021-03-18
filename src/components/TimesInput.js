@@ -25,11 +25,18 @@ const useStyles = makeStyles((theme) =>({
     },
 }));
 
+const getInitStateFromProps = (props) =>{
+    if(props.values[`${props.day}_open`] && props.values[`${props.day}_close`]){
+        return 2;
+    }
+    return 0;
+};
+
 const TimesInput = (props) => {
     const classes = useStyles();
     const { t } = useTranslation();
     const [state, setState] = useState({
-        selectTime: 0,
+        selectTime: getInitStateFromProps(props),
     });
     const setOpenCloseTime = (event) =>{
         const selectTime = event.target.value;

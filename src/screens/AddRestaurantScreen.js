@@ -10,53 +10,7 @@ import axios from '../api';
 import { getCookie } from '../utils';
 
 
-const addRestaurantValidator = (t) =>  (( values ) => {
-	const errors = {};
-	if(!values.name){
-		errors.name = t('Required');
-	} else if(
-		false // all if false are for future use. To add condition where a whatever would be invalid
-	){
-		errors.name = t('Invalid valid for first name');
-	}
-	if(!values.description){
-		errors.description = t('Required');
-	} else if(
-		false
-	){
-		errors.description = t('Invalid valid for description');
-	}
-	if(!values.address){
-		errors.address = t('Required');
-	} else if(false){
-		errors.address = '';
-	}
-	if(!values.borough){
-		errors.borough = t('Required');
-	}else if(false){
-		errors.borough = '';
-	}if(!values.zip_code){
-		errors.zip_code = t('Required');
-	}else if(!/^\d{5}$/i.test(values.zip_code)){
-		errors.zip_code = t('Invalid zip code');
-	}else if( values.zip_code !== '11220' && values.zip_code !== '11232'){
-		errors.zip_code = t('Invalid zip code');
-	}
-	if (
-		values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,256}$/i.test(values.email)
-	) {
-		errors.email = t('Invalid email address');
-	}
-	const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-	for(let i=0; i<daysOfWeek.length; i++){
-		if(values[`${daysOfWeek[i]}_open`] !== null && values[`${daysOfWeek[i]}_close`] !== null){
-			if( moment(values[`${daysOfWeek[i]}_open`], 'hh:mm:ss') > moment(values[`${daysOfWeek[i]}_close`], 'hh:mm:ss')){
-				errors[`${daysOfWeek[i]}_close`] = t('Closing time must be greater than opening time.');
-			}
-		}
-	}
-	return errors;
-});
+
 
 const AddRestaurantScreen = (props) => {
     const { t } = useTranslation();
@@ -125,17 +79,6 @@ const AddRestaurantScreen = (props) => {
 			if(valuesCopy.phone_number){
 				valuesCopy['phone_number'] = valuesCopy['phone_number'].replace('-','').replace(' ', '').replace('(','').replace(')','');
 			}
-			/*
-			const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-			for(let i=0; i< daysOfWeek.length; i++){
-				if(valuesCopy[`${daysOfWeek[i]}_open`]){
-					valuesCopy[`${daysOfWeek[i]}_open`] = valuesCopy[`${daysOfWeek[i]}_open`];
-				}
-				if(valuesCopy[`${daysOfWeek[i]}_close`]){
-					valuesCopy[`${daysOfWeek[i]}_close`] = valuesCopy[`${daysOfWeek[i]}_close`];
-				}
-			}
-			*/
             const csrftoken = getCookie("csrftoken") || "";
             //const response = 
 			await axios.post('/api/v0/foodlocations/', valuesCopy, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
@@ -183,7 +126,7 @@ const AddRestaurantScreen = (props) => {
 			<BaseScreen>
 				<div style={{paddingTop: 60, minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 					{
-						<AddRestaurantForm {...{categories: state.categories, title: t("Add Restaurant"), initialValues, onSubmit, validate: addRestaurantValidator(t)}}/>
+						<AddRestaurantForm {...{categories: state.categories, title: t("Add Restaurant"), initialValues, createMethod: onSubmit }}/>
 					}
 				</div>
 			</BaseScreen>
