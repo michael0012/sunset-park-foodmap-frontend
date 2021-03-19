@@ -22,11 +22,14 @@ const LocationMarker = (props) => {
             props.clickLocateIcon("begin");
             // set to 0
         }
+        
     });
     return (position === null) || (accuracy === null) ? null : (
-        <CircleMarker center={position} radius={accuracy}>
-            <Marker position={position}/>
-        </CircleMarker>
+        <React.Fragment>
+            <CircleMarker center={position} radius={accuracy}>
+                <Marker position={position}/>
+            </CircleMarker>
+        </React.Fragment>
     )
 };
 

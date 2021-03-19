@@ -72,7 +72,7 @@ const useStyles = makeStyles(( theme ) => ({
         '0%':{
           opacity:0,
         },
-        '10%': {
+        '15%': {
           opacity:1,
         },
         '75%': {

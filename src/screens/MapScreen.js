@@ -15,6 +15,7 @@ import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import './MapScreen.css';
+import FoodLocationDrawer from '../components/FoodLocationDrawer';
 
 let DefaultIcon = L.icon({
     ...L.Icon.Default.prototype.options,
@@ -43,20 +44,27 @@ const MapScreen = (props) => {
             restaurant: false,
             cashOnly: false,
             acceptsCredit: false,
-        }
+        },
+        foodLocationId: null,
+        foodLocationDrawer: false,
     });
     useEffect(() => {
         const getFoodLocations = async () => {
             const csrftoken = getCookie("csrftoken") || "";
             try{
-                const response = await axios.get('/api/v0/foodlocations/', {}, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
+                const response = await axios.get('/api/v0/foodlocations/', {}, {responseType: 'json', 
+                    withCredentials: true, 
+                    credentials: 'include', 
+                    headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}
+                });
                 if( response.data){
                     setState( state => ({
                         ...state,
                         next: response.data.next,
-                        locations:
-                            response.data.results.features.map( item => ({...item.properties, coordinates: [item.geometry.coordinates[1], item.geometry.coordinates[0]]}) )
-                        ,
+                        locations: response.data.results.features.map( item => ({
+                                ...item.properties, coordinates: [item.geometry.coordinates[1], 
+                                item.geometry.coordinates[0]]
+                            }) ),
                     }));
                 }
             }catch{
@@ -65,6 +73,24 @@ const MapScreen = (props) => {
         };
         getFoodLocations();
     }, []);
+    const toggleDrawer = (event) => {
+        if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+          return;
+        }
+    
+        setState({ 
+            ...state, 
+            foodLocationDrawer: !state.foodLocationDrawer,
+            foodLocationId: null
+        });
+      };
+    const clickLocationMarker = (foodLocationId) => {
+        setState(state => ({
+            ...state,
+            foodLocationId: foodLocationId,
+            foodLocationDrawer: true
+        }));
+    };
     const clickLocateIcon = (value) => {
         setState({
             ...state,
@@ -165,6 +191,17 @@ const MapScreen = (props) => {
     });
     return (
         <MapBaseScreen>
+            {
+                state.foodLocationDrawer && (
+                    <FoodLocationDrawer 
+                        openDrawer={state.foodLocationDrawer}
+                        toggleDrawer={toggleDrawer}
+                        foodLocations={state.locations}
+                        foodLocationId={state.foodLocationId} 
+                    />
+                )
+            }
+            
             <MapSearchBar onSubmit={submitSearch('search')} clickLocateIcon={clickLocateIcon}/>
             <MapFilterBar filterClick={filterClick} queryFiltersFlags={state.queryFiltersFlags} />
             <MapContainer center={state.center} zoom={state.zoom} scrollWheelZoom={true} style={{height: "100vh", width: "100%", zIndex:0}}>
@@ -187,15 +224,8 @@ const MapScreen = (props) => {
                                         value={item.id}
                                         eventHandlers={{
                                             click: (e) => {
-                                                const map = e.target._map;
-                                                const latLng = e.target.getLatLng();
-                                                setState({
-                                                    ...state,
-                                                    center: [latLng.lat, latLng.lng],
-                                                });
-                                                const zoomedIn = 18;
-                                                map.setView(latLng, zoomedIn, { animate: true });
-                                                e.target.openPopup();
+                                                e.target.closePopup();
+                                                clickLocationMarker(item.id);
                                             },
                                             mouseover: (e) => {
                                                 e.target._tooltip.setOpacity(0);

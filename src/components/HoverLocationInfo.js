@@ -18,23 +18,47 @@ const useStyles = makeStyles((theme) =>({
     },
 }));
 
+function formatTime(timeString) {
+    const timeStringArray = timeString.split(':');
+    let finalTimeArray = [];
+    let amOrPm = "AM";
+    if(timeStringArray[0]>=12){
+        finalTimeArray[0] = String(parseInt(timeStringArray[0]) - 12);
+        amOrPm = "PM";
+    }else{
+        finalTimeArray[0] = timeStringArray[0];
+    }
+    if(finalTimeArray[0] === "0"){
+        finalTimeArray[0] = "12";
+    }
+    if(finalTimeArray[0] === "00"){
+        finalTimeArray[0] = "12";
+    }
+    if(finalTimeArray[0] < "10"){
+        finalTimeArray[0] = "0" + finalTimeArray[0];
+    }
+    finalTimeArray[1] = timeStringArray[1];
+    return finalTimeArray.join(":")+" "+amOrPm; 
+}
+
 const HoverLocationInfo = (props) => {
     const classes = useStyles();
     const { t } = useTranslation();
     const defaultImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/SunsetPark.jpg/320px-SunsetPark.jpg";
     const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const currentDay = moment().day();
+    const currentESTMoment =  moment(Date.now()).utcOffset('-0500');
+    const currentDay = currentESTMoment.day();
     const currentDayString = daysOfWeek[currentDay];
-    const openDateTime = props.location[`${currentDayString}_open`] === null? null: moment("1970-01-01T"+props.location[`${currentDayString}_open`]);
-    const closeDateTime = props.location[`${currentDayString}_close`] === null? null: moment("1970-01-01T"+props.location[`${currentDayString}_close`]);
+    const openDateTime = props.location[`${currentDayString}_open`];
+    const closeDateTime = props.location[`${currentDayString}_close`];
     const checkOpen = () => {
-        if(props.location[`${currentDayString}_open`] === null){
+        if(openDateTime === null){
             return false;
-        }else if( props.location[`${currentDayString}_close`] === null){
+        }else if( closeDateTime === null){
             return true;
         }
-        const currentTime = moment().format('HH:mm');
-        return ( (openDateTime.format('HH:mm') <= currentTime) && ((String(closeDateTime.format('HH:mm')) === '23:59') || (currentTime <= closeDateTime.format('HH:mm'))));
+        const currentTime = currentESTMoment.format('HH:mm');
+        return ( (openDateTime <= currentTime) && ((closeDateTime === '23:59') || (currentTime <= closeDateTime)));
         
 
     };
@@ -46,8 +70,8 @@ const HoverLocationInfo = (props) => {
                 <Typography variant="h6" className={classes.name} gutterBottom style={{margin: "2px 0px"}}>{props.location.name}</Typography>
                 <Typography variant="body2" color="textSecondary" component="p" className={classes.subInfoText} style={{margin: "2px 0px"}}>{props.location.address}</Typography>
                 <Typography variant="body2" color={(isOpen && "initial") || ("error")} component="p" className={classes.subInfoText} style={{margin: "2px 0px", color: (isOpen && "green") || ""}}>{ (isOpen && t("Open")) || t("Closed")}</Typography>
-                <Typography variant="body2" color="textSecondary" component="p" className={classes.subInfoText} style={{margin: "2px 0px"}}>{(openDateTime !== null) && (t("Opens at") + " " + openDateTime.format('hh:mm a'))}</Typography>
-                <Typography variant="body2" color="textSecondary" component="p" className={classes.subInfoText} style={{margin: "2px 0px"}}>{(closeDateTime !== null) && (t("Closes at") + " " + closeDateTime.format('hh:mm a'))}</Typography>
+                <Typography variant="body2" color="textSecondary" component="p" className={classes.subInfoText} style={{margin: "2px 0px"}}>{(openDateTime !== null) && (t("Opens at") + " " + formatTime(openDateTime))}</Typography>
+                <Typography variant="body2" color="textSecondary" component="p" className={classes.subInfoText} style={{margin: "2px 0px"}}>{(closeDateTime !== null) && (t("Closes at") + " " + formatTime(closeDateTime))}</Typography>
             </div>
         </div>
     );
