@@ -9,11 +9,14 @@ import ListItem from '@material-ui/core/ListItem';
 import moment from 'moment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
-
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import CheckIcon from '@material-ui/icons/Check';
+import i18n from '../i18n';
 
 const useStyles = makeStyles((theme) => ({
     list: {
       width: 320,
+      overflowX: "hidden",
     },
     fullList: {
       width: 'auto',
@@ -27,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
     name: {
         fontSize: "24px",
         fontWeight: "bold", 
+    },
+    descriptionCSS:{
+        whiteSpace: "pre-wrap",
     },
     subText: {
         fontSize: "14px",
@@ -71,6 +77,15 @@ const FoodLocationDrawer= (props) => {
     const formatPhoneNumber = (phoneNumber) => {
         return `(${phoneNumber.substring(0, 3)}) ${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}`
     };
+    const formatDescription = (foodLocation) => {
+        if(foodLocation.translations.length){
+            const filteredFoodLocations = foodLocation.translations.filter(item => ((item.language === i18n.language) && (item.model_field === "description")));
+            if(filteredFoodLocations.length){
+                return filteredFoodLocations[0].text;
+            }
+        }
+        return foodLocation.description;
+    };
     const isOpen = checkOpen();
     const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
     return (
@@ -93,17 +108,66 @@ const FoodLocationDrawer= (props) => {
                         <Typography variant="h4" className={classes.name} gutterBottom style={{margin: "2px 0px"}}>{location.name}</Typography>
                     </ListItem>
                     <ListItem >
-                        <Typography variant="body1" gutterBottom>{location.description}</Typography>
+                        <Typography variant="body1" className={classes.descriptionCSS} gutterBottom>{formatDescription(location)}</Typography>
                     </ListItem>
                     <ListItem >
                         <LocationOnOutlinedIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
                         <Typography variant="subtitle1" className={classes.subText}>{`${location.address}, ${mapBoroughCodeToName(location.borough)}, NY ${location.zip_code}`}</Typography>
+                    </ListItem>
+                    <ListItem>
+                        <ScheduleIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
+                        <Typography variant="subtitle1" style={{color: (isOpen && "green") || "red"}} className={classes.subText}>{(isOpen && t("Open")) || t("Closed") }</Typography>
                     </ListItem>
                     {
                         location.phone_number && (
                             <ListItem>
                                 <PhoneIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
                                 <Typography variant="subtitle1" className={classes.subText}>{formatPhoneNumber(location.phone_number)}</Typography>
+                            </ListItem>
+                        )
+                    }
+                    {
+                        location.indoor_dining && (
+                            <ListItem>
+                                <CheckIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
+                                <Typography variant="subtitle1" className={classes.subText}>{t("Indoor Dining")}</Typography>
+                            </ListItem>
+                        )
+                    }
+                    {
+                        location.outdoor_dining && (
+                            <ListItem>
+                                <CheckIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
+                                <Typography variant="subtitle1" className={classes.subText}>{t("Outdoor Dining")}</Typography>
+                            </ListItem>
+                        )
+                    }
+                    {
+                        (!location.cash_only && (
+                            <ListItem>
+                                <CheckIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
+                                <Typography variant="subtitle1" className={classes.subText}>{t("Accepts Credit")}</Typography>
+                            </ListItem>
+                        )) ||(
+                            <ListItem>
+                                <CheckIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
+                                <Typography variant="subtitle1" className={classes.subText}>{t("Cash Only")}</Typography>
+                            </ListItem>
+                        )
+                    }
+                    {
+                        location.takeout && (
+                            <ListItem>
+                                <CheckIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
+                                <Typography variant="subtitle1" className={classes.subText}>{t("Take Out")}</Typography>
+                            </ListItem>
+                        )
+                    }
+                    {
+                        location.restaurant && (
+                            <ListItem>
+                                <CheckIcon color="primary" style={{marginRight: "8px", marginLeft: "2px"}}/>
+                                <Typography variant="subtitle1" className={classes.subText}>{t("Restaurant")}</Typography>
                             </ListItem>
                         )
                     }
