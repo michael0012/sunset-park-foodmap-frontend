@@ -14,5 +14,7 @@
     "/otherthing": "/es/otherthing",
     "Multilingual React App": "Aplicación React multilingüe",
     "description": "descripción",
-    "This is a Multilingual website using react-dom-router, react-redux and i18n": "Este es un sitio web multilingüe que utiliza react-dom-router, react-redux e i18n"
+    "/about": "/es/about",
+    "About": "Acerca de",
+    "about-text": "Mapa de comida de Sunset Park, Brooklyn creado por Michael Medina, residente de toda la vida de Sunset Park. Para contactarlo, envíele un correo electrónico a mike.brooklyn525@gmail.com"
   }

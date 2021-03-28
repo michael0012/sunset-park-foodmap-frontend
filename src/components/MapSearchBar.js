@@ -62,8 +62,8 @@ const MapScreenBar = (props) => {
       setState({...state, loading: false, submitted: true});
     });
     const clearSearch = (onSubmit) => (async () => {
-      setState({...state, submitted: false, searchValue: ""});
       await onSubmit("");
+      setState(state => ({...state, submitted: false, searchValue: ""}));
     });
     const onChange = (e) => {
       setState({
@@ -86,27 +86,26 @@ const MapScreenBar = (props) => {
             value={state.searchValue}
             onChange={onChange}
           />
-          <IconButton type="submit" className={classes.iconButton} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-          <Divider className={classes.divider} orientation="vertical" />
           {
-            (!state.submitted &&(
-                (!state.loading && (
-                <IconButton color="primary" className={classes.iconButton} aria-label={t("location")} onClick={() => {props.clickLocateIcon("start")}}>
-                  <GpsFixedOutlinedIcon /> 
-                </IconButton>
+            (!state.loading &&(
+                (!state.submitted  && (
+                  <IconButton type="submit" className={classes.iconButton} aria-label="search">
+                    <SearchIcon />
+                  </IconButton>
                 ) ) ||
                 (
-                  <CircularProgress style={{width: "22px", height: "22px"}}/>
+                  <IconButton color="primary" className={classes.iconButton} aria-label={t("clear search")} onClick={clearSearch(props.onSubmit)}>
+                    <CloseOutlinedIcon/>
+                  </IconButton>
                 )
             ) )|| (
-              <IconButton color="primary" className={classes.iconButton} aria-label={t("clear search")} onClick={clearSearch(props.onSubmit)}>
-                <CloseOutlinedIcon/>
-              </IconButton>
-
+              <CircularProgress style={{width: "22px", height: "22px"}}/>
             )
           }
+          <Divider className={classes.divider} orientation="vertical" />
+          <IconButton color="primary" className={classes.iconButton} aria-label={t("location")} onClick={() => {props.clickLocateIcon("start")}}>
+            <GpsFixedOutlinedIcon /> 
+          </IconButton>
         </Paper>
         <NavDrawer toggleDrawer={toggleNavDrawer} openDrawer={state.openNavDrawer}/>
       </React.Fragment>

@@ -6,6 +6,7 @@ import SelectLang from './components/SelectLang';
 import { SET_LANG } from './reducers/language';
 import NotFound from './screens/NotFound';
 import MapScreen from './screens/MapScreen';
+import AboutScreen from './screens/AboutScreen';
 
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -48,6 +49,7 @@ let LoggedInRoutes = (props) => {
               // the routes below must have paths that start with /:lang([a-z]{2})/ inorder for template to work.
           }
           <Route exact path="/:lang([a-z]{2})/foodmap" component={MapScreen} />
+          <Route exact path="/:lang([a-z]{2})/about" component={AboutScreen} />
           {
             // 404 error page below
           }

@@ -8,6 +8,7 @@ import NotFound from './screens/NotFound';
 import MapScreen from './screens/MapScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import AboutScreen from './screens/AboutScreen';
 
 
 
@@ -53,6 +54,7 @@ let LoggedOutRoutes = (props) => {
           <Route exact path="/:lang([a-z]{2})/foodmap" component={MapScreen} />
           <Route exact path="/:lang([a-z]{2})/login" component={LoginScreen}/>
           <Route exact path="/:lang([a-z]{2})/signup" component={RegisterScreen} />
+          <Route exact path="/:lang([a-z]{2})/about" component={AboutScreen} />
           {
             // 404 error page below
           }

@@ -16,6 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountOutlined';
 import RoomOutlinedIcon from '@material-ui/icons/RoomOutlined';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -73,6 +74,10 @@ let NavDrawer = (props) => {
             <Divider/>
             <div className={classes.list} role="presentation">
               <List>
+                <ListItem button onClick={goAndClose('/about')}>
+                  <ListItemIcon><InfoOutlinedIcon/></ListItemIcon>
+                  <ListItemText primary={t("About")} />
+                </ListItem>
                 <ListItem button onClick={goAndClose('/foodmap')}>
                   <ListItemIcon><RoomOutlinedIcon /></ListItemIcon>
                   <ListItemText primary={"Map"} />
@@ -111,6 +116,10 @@ let NavDrawer = (props) => {
             <Divider/>
             <div className={classes.list} role="presentation">
               <List>
+                <ListItem button onClick={goAndClose('/about')}>
+                  <ListItemIcon><InfoOutlinedIcon/></ListItemIcon>
+                  <ListItemText primary={t("About")} />
+                </ListItem>
                 <ListItem button onClick={goAndClose('/foodmap') }>
                   <ListItemIcon><RoomOutlinedIcon /></ListItemIcon>
                   <ListItemText primary={"Map"} />

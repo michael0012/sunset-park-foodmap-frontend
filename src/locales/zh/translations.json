@@ -13,5 +13,7 @@
     "/otherthing": "/zh/otherthing",
     "Multilingual React App": "多语言React应用",
     "description":"描述",
-    "This is a Multilingual website using react-dom-router, react-redux and i18n":"这是一个使用react-dom-router，react-redux和i18n的多语言网站"
+    "/about": "/zh/about",
+    "About": "关于",
+    "about-text": "布鲁克林日落公园的​​美食地图，由终身日落公园居民迈克尔·麦迪纳（Michael Medina）创建。要与他联系，请给他发送电子邮件mike.brooklyn525@gmail.com"
   }

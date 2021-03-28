@@ -10,7 +10,8 @@
     "Welcome to Other thing...": "Welcome to Other thing...",
     "Next Page": "Next Page",
     "/otherthing": "/en/otherthing",
-    "Multilingual React App":"Multilingual React App",
     "description": "description",
-    "This is a Multilingual website using react-dom-router, react-redux and i18n":"This is a Multilingual website using react-dom-router, react-redux and i18n"
+    "/about": "/en/about",
+    "About": "About",
+    "about-text": "Food map of Sunset Park, Brooklyn created by lifelong Sunset Park resident Michael Medina. To contact him email him at mike.brooklyn525@gmail.com."
 }
