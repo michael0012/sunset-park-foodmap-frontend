@@ -34,7 +34,7 @@ function formatTime(timeString) {
     if(finalTimeArray[0] === "00"){
         finalTimeArray[0] = "12";
     }
-    if(finalTimeArray[0] < "10"){
+    if(finalTimeArray[0] < "10" && (finalTimeArray[0].length === 1)){
         finalTimeArray[0] = "0" + finalTimeArray[0];
     }
     finalTimeArray[1] = timeStringArray[1];
