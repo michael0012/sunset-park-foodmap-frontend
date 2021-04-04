@@ -6,7 +6,7 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import PhoneIcon from '@material-ui/icons/Phone';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -58,7 +58,7 @@ const FoodLocationDrawer= (props) => {
     const location = getFoodLocationFromId(props.foodLocations, props.foodLocationId);
     const defaultImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/SunsetPark.jpg/320px-SunsetPark.jpg";
     const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const currentESTMoment =  moment(Date.now()).utcOffset('-0500');
+    const currentESTMoment =  moment(Date.now()).tz('America/New_York');
     const currentDay = currentESTMoment.day();
     const currentDayString = daysOfWeek[currentDay];
     const openDateTime = location[`${currentDayString}_open`];

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MapBaseScreen from './MapBaseScreen';
 import { getCookie, camelToSnake } from '../utils';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import axios from '../api';
 import i18n from '../i18n';
 import MapSearchBar from '../components/MapSearchBar';
@@ -106,7 +106,7 @@ const MapScreen = (props) => {
             }
             if(keyQuery === 'openCurrently'){
                 const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-                const momentTimeObject = moment(Date.now()).utcOffset('-0500');
+                const momentTimeObject = moment(Date.now()).tz('America/New_York');
                 const currentDay = momentTimeObject.day();
                 const currentDayString = daysOfWeek[currentDay];
                 const currentTime  = momentTimeObject.format('HH:mm')+":00";

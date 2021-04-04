@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
@@ -46,7 +46,7 @@ const HoverLocationInfo = (props) => {
     const { t } = useTranslation();
     const defaultImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/SunsetPark.jpg/320px-SunsetPark.jpg";
     const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const currentESTMoment =  moment(Date.now()).utcOffset('-0500');
+    const currentESTMoment =  moment(Date.now()).tz('America/New_York');
     const currentDay = currentESTMoment.day();
     const currentDayString = daysOfWeek[currentDay];
     const openDateTime = props.location[`${currentDayString}_open`];
