@@ -34,11 +34,11 @@ function formatTime(timeString) {
     if(finalTimeArray[0] === "00"){
         finalTimeArray[0] = "12";
     }
-    if(finalTimeArray[0] < "10" && (finalTimeArray[0].length === 1)){
+    if( (finalTimeArray[0].length === 1) && (parseInt(finalTimeArray[0]) < 10) ){
         finalTimeArray[0] = "0" + finalTimeArray[0];
     }
     finalTimeArray[1] = timeStringArray[1];
-    return finalTimeArray.join(":")+" "+amOrPm; 
+    return finalTimeArray.join(":") + " " + amOrPm;
 }
 
 const HoverLocationInfo = (props) => {
