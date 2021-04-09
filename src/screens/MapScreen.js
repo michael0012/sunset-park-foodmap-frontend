@@ -103,6 +103,9 @@ const MapScreen = (props) => {
         let filteredFoodLocations = [...foodLocations];
 
         for (let key in queryFiltersFlags){
+            if(key === 'acceptsCredit' && queryFiltersFlags[key]){
+                filteredFoodLocations = filteredFoodLocations.filter(item => !item['cash_only']);
+            }
             if(queryFiltersFlags[key]){
                 if(key === 'openCurrently'){
                     const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -114,9 +117,10 @@ const MapScreen = (props) => {
                     const timeMore = `${currentDayString}_close`;
                     filteredFoodLocations = filteredFoodLocations.filter(item => (item[timeLess] && item[timeMore] && (item[timeLess] <= currentTime) && (item[timeMore] >= currentTime)))
                 }
-                if(['indoorDining', 'outdoorDining', 'takeout', 'restaurant', 'cashOnly', 'acceptsCredit'].includes(key)){
+                if(['indoorDining', 'outdoorDining', 'takeout', 'restaurant', 'cashOnly'].includes(key)){
                     filteredFoodLocations = filteredFoodLocations.filter(item => item[camelToSnake(key)]);
                 }
+                
             }
         }
         return filteredFoodLocations;
