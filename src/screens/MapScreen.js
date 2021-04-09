@@ -139,7 +139,7 @@ const MapScreen = (props) => {
                 const response = await axios.get('/api/v0/foodlocations/', {params}, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
                 if( response.data){
                     const modifiedLocationData = response.data.results.features.map( item => ({...item.properties, coordinates: [item.geometry.coordinates[1], item.geometry.coordinates[0]]}) );
-                    await setState( state => ({
+                    setState( state => ({
                         ...state,
                         locations: modifiedLocationData,
                         queryLocations: filterFoodLocations(modifiedLocationData, state.queryFiltersFlags),
@@ -162,7 +162,7 @@ const MapScreen = (props) => {
                 acceptsCredit: false,
                 queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
             };
-            await setState(state => ({
+            setState(state => ({
                 ...state,
                 queryFiltersFlags
             }));
@@ -172,7 +172,7 @@ const MapScreen = (props) => {
                 [filterValue]: !queryFiltersFlags[filterValue],
                 cashOnly: false,
             }; 
-            await setState(state => ({
+            setState(state => ({
                 ...state,
                 queryFiltersFlags,
                 queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
@@ -182,7 +182,7 @@ const MapScreen = (props) => {
                 ...queryFiltersFlags,
                 [filterValue]: !queryFiltersFlags[filterValue]
             }
-            await setState(state => ({
+            setState(state => ({
                 ...state,
                 queryFiltersFlags,
                 queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
