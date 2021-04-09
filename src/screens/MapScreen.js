@@ -33,7 +33,7 @@ const MapScreen = (props) => {
         center: [40.647568, -74.004103],
         locate: "begin",
         locations: null,
-        next: null,
+        queryLocations: null,
         searched: false,
         paramsObject: {},
         queryFiltersFlags: {
@@ -58,13 +58,14 @@ const MapScreen = (props) => {
                     headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}
                 });
                 if( response.data){
+                    const modifiedLocationData = response.data.results.features.map( item => ({
+                        ...item.properties, 
+                        coordinates: [item.geometry.coordinates[1], item.geometry.coordinates[0]]
+                    }) );
                     setState( state => ({
                         ...state,
-                        next: response.data.next,
-                        locations: response.data.results.features.map( item => ({
-                                ...item.properties, coordinates: [item.geometry.coordinates[1], 
-                                item.geometry.coordinates[0]]
-                            }) ),
+                        locations: modifiedLocationData,
+                        queryLocations: modifiedLocationData,
                     }));
                 }
             }catch{
@@ -96,7 +97,31 @@ const MapScreen = (props) => {
             ...state,
             locate: value
         });
-    }; 
+    };
+
+    const filterFoodLocations = (foodLocations, queryFiltersFlags) => {
+        let filteredFoodLocations = [...foodLocations];
+
+        for (let key in queryFiltersFlags){
+            if(queryFiltersFlags[key]){
+                if(key === 'openCurrently'){
+                    const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                    const momentTimeObject = moment(Date.now()).tz('America/New_York');
+                    const currentDay = momentTimeObject.day();
+                    const currentDayString = daysOfWeek[currentDay];
+                    const currentTime  = momentTimeObject.format('HH:mm')+":00";
+                    const timeLess = `${currentDayString}_open`;
+                    const timeMore = `${currentDayString}_close`;
+                    filteredFoodLocations = filteredFoodLocations.filter(item => (item[timeLess] && item[timeMore] && (item[timeLess] <= currentTime) && (item[timeMore] >= currentTime)))
+                }
+                if(['indoorDining', 'outdoorDining', 'takeout', 'restaurant', 'cashOnly', 'acceptsCredit'].includes(key)){
+                    filteredFoodLocations = filteredFoodLocations.filter(item => item[camelToSnake(key)]);
+                }
+            }
+        }
+        return filteredFoodLocations;
+    };
+
     const submitSearch = (keyQuery) => (async (value) => {
         if((value || keyQuery !== 'search') || state.searched){
             if(!value && keyQuery === 'search'){
@@ -104,52 +129,16 @@ const MapScreen = (props) => {
             }else if(keyQuery === 'search'){
                 state.paramsObject[keyQuery] = value;
             }
-            if(keyQuery === 'openCurrently'){
-                const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-                const momentTimeObject = moment(Date.now()).tz('America/New_York');
-                const currentDay = momentTimeObject.day();
-                const currentDayString = daysOfWeek[currentDay];
-                const currentTime  = momentTimeObject.format('HH:mm')+":00";
-                const timeLess = `${currentDayString}_open__lte`;
-                const timeMore = `${currentDayString}_close__gte`;
-                if(value){
-                    state.paramsObject[timeLess] = currentTime;
-                    state.paramsObject[timeMore] = currentTime;
-                }else{
-                    delete state.paramsObject[timeLess];
-                    delete state.paramsObject[timeMore];
-                }
-            } 
-            if(['indoorDining', 'outdoorDining', 'takeout', 'restaurant', 'cashOnly', 'acceptsCredit'].includes(keyQuery) ){
-                
-                if(keyQuery === 'cashOnly' || keyQuery === 'acceptsCredit'){
-                    if(keyQuery === 'cashOnly' &&  value){
-                        state.paramsObject['cash_only'] = 'True';
-                    } else if(keyQuery === 'cashOnly'){
-                        delete state.paramsObject['cash_only'];
-                    }
-                    if(keyQuery === 'acceptsCredit' &&  value){
-                        state.paramsObject['cash_only'] = 'False';
-                    } else if(keyQuery === 'acceptsCredit'){
-                        delete state.paramsObject['cash_only'];
-                    }
-                }
-                else if(value){
-                    state.paramsObject[camelToSnake(keyQuery)] = 'True';
-                }else{
-                    delete state.paramsObject[camelToSnake(keyQuery)];
-                }
-            }
             const csrftoken = getCookie("csrftoken") || "";
+            const params = state.paramsObject.search ? { search: state.paramsObject.search } : {};
             try{
-                const response = await axios.get('/api/v0/foodlocations/', {params: state.paramsObject}, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
+                const response = await axios.get('/api/v0/foodlocations/', {params}, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
                 if( response.data){
-                    setState( state => ({
+                    const modifiedLocationData = response.data.results.features.map( item => ({...item.properties, coordinates: [item.geometry.coordinates[1], item.geometry.coordinates[0]]}) );
+                    await setState( state => ({
                         ...state,
-                        next: response.data.next,
-                        locations:
-                            response.data.results.features.map( item => ({...item.properties, coordinates: [item.geometry.coordinates[1], item.geometry.coordinates[0]]}) )
-                        ,
+                        locations: modifiedLocationData,
+                        queryLocations: filterFoodLocations(modifiedLocationData, state.queryFiltersFlags),
                         searched: true,
                     }));
                 }
@@ -158,36 +147,44 @@ const MapScreen = (props) => {
             }
         }
     });
-    const filterClick = (filterValue) => (async ()=> {
+    const filterClick = (filterValue) => (async () => {
         const passingFlag = state.queryFiltersFlags[filterValue];
-        await submitSearch(filterValue)(!passingFlag);
+        //await submitSearch(filterValue)(!passingFlag);
+        let queryFiltersFlags = {...state.queryFiltersFlags};
         if(filterValue === 'cashOnly' && !passingFlag && state.queryFiltersFlags['acceptsCredit']){
-            setState(state => ({
+            queryFiltersFlags = {
+                ...queryFiltersFlags,
+                [filterValue]: !queryFiltersFlags[filterValue],
+                acceptsCredit: false,
+                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
+            };
+            await setState(state => ({
                 ...state,
-                queryFiltersFlags:{
-                    ...state.queryFiltersFlags,
-                    [filterValue]: !state.queryFiltersFlags[filterValue],
-                    acceptsCredit: false,
-                }
+                queryFiltersFlags
             }));
         } else if(filterValue === 'acceptsCredit' && !passingFlag && state.queryFiltersFlags['cashOnly']){
-            setState(state => ({
+            queryFiltersFlags = {
+                ...queryFiltersFlags,
+                [filterValue]: !queryFiltersFlags[filterValue],
+                cashOnly: false,
+            }; 
+            await setState(state => ({
                 ...state,
-                queryFiltersFlags:{
-                    ...state.queryFiltersFlags,
-                    [filterValue]: !state.queryFiltersFlags[filterValue],
-                    cashOnly: false,
-                }
+                queryFiltersFlags,
+                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
             }));
         }else{
-            setState(state => ({
+            queryFiltersFlags = {
+                ...queryFiltersFlags,
+                [filterValue]: !queryFiltersFlags[filterValue]
+            }
+            await setState(state => ({
                 ...state,
-                queryFiltersFlags:{
-                    ...state.queryFiltersFlags,
-                    [filterValue]: !state.queryFiltersFlags[filterValue]
-                }
+                queryFiltersFlags,
+                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
             }));
         }
+
     });
     return (
         <MapBaseScreen>
@@ -214,8 +211,8 @@ const MapScreen = (props) => {
                 maxZoom="20"
                 />
                 {
-                    state.locations && (
-                        state.locations.map(item => {
+                    state.queryLocations && (
+                        state.queryLocations.map(item => {
                             if(item.coordinates && item.coordinates.length === 2){
                                 return (
                                     <Marker

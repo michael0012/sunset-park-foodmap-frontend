@@ -22,12 +22,12 @@ const options = {
         extensions: ['.js']
     },
     lngs: ['en', 'es', 'zh'],
-    ns: ['translation'],
-    defaultNs: 'translation',
+    ns: ['translations'],
+    defaultNs: 'translations',
     defaultValue: '',
     resource: {
-        loadPath: 'i18n/{{lng}}/{{ns}}.json',
-        savePath: 'i18n/{{lng}}/{{ns}}.json',
+        loadPath: 'src/locales/{{lng}}/{{ns}}.json',
+        savePath: 'src/locales/{{lng}}/{{ns}}.json',
     },
     nsSeparator: ':',
     keySeparator: '.',
@@ -39,4 +39,4 @@ const options = {
 
 vfs.src(['src/*.js', 'src/*/*.js'])
     .pipe(scanner(options))
-    .pipe(vfs.dest('./translations'));
+    .pipe(vfs.dest('.'));
