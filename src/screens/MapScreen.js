@@ -160,11 +160,11 @@ const MapScreen = (props) => {
                 ...queryFiltersFlags,
                 [filterValue]: !queryFiltersFlags[filterValue],
                 acceptsCredit: false,
-                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
             };
             setState(state => ({
                 ...state,
-                queryFiltersFlags
+                queryFiltersFlags,
+                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
             }));
         } else if(filterValue === 'acceptsCredit' && !passingFlag && state.queryFiltersFlags['cashOnly']){
             queryFiltersFlags = {
