@@ -149,7 +149,7 @@ const FoodLocationTranslationForm = (props) => {
                                             </Select>
                                         </FormControl>
                                     </AddErrors>
-                                    <TextInputMaterial { ...{name: "text",  label: t("Text"), type: "text", required: true, values, errors, touched, handleChange, handleBlur,}}/>                                
+                                    <TextInputMaterial { ...{name: "text",  label: t("Text"), type: "text", required: true, values, errors, touched, handleChange, handleBlur, multiline:true, rows: 4}}/>                                
                                     <Grid container justify="center" alignItems="center" className={classes.buttonHolder}>
                                         <Grid item xs={12} sm={10} md={6}>
                                             <Button variant="contained" size="large" type="submit" color="primary" disabled={isSubmitting}>

@@ -26,12 +26,9 @@ const MapFilterBar = (props) => {
     const { t } = useTranslation();
     return(
         <div className={classes.chipHolder}>
-            <div style={{paddingBottom: "17px", overflowX: "scroll", boxSizing: "content-box", height: "100%", display: 'flex', marginRight: "12px"}}>
+            <div style={{paddingBottom: "17px", overflowX: "scroll", boxSizing: "content-box", height: "100%", display: 'flex'}}>
                 <Chip variant="default" style={{marginLeft: "7px"}} className={classes.chipStyle} color={(props.queryFiltersFlags.openCurrently && "primary") || "default"} label={t("Open Now")}
                     onClick={props.filterClick('openCurrently')}
-                />
-                <Chip variant="default" className={classes.chipStyle} color={(props.queryFiltersFlags.cashOnly && "primary") || "default"} label={t("Cash Only")}
-                    onClick={props.filterClick('cashOnly')}
                 />
                 <Chip variant="default" className={classes.chipStyle} color={(props.queryFiltersFlags.acceptsCredit && "primary") || "default"} label={t("Accepts Credit")}
                     onClick={props.filterClick('acceptsCredit')}
@@ -48,6 +45,7 @@ const MapFilterBar = (props) => {
                 <Chip variant="default" className={classes.chipStyle} color={(props.queryFiltersFlags.restaurant && "primary") || "default"} label={t("Restaurant")}
                     onClick={props.filterClick('restaurant')}
                 />
+                <span style={{paddingRight: "7px"}}></span>
             </div>
         </div>
     );

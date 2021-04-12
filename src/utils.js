@@ -1,3 +1,26 @@
+export function formatTime(timeString) {
+  const timeStringArray = timeString.split(':');
+  let finalTimeArray = [];
+  let amOrPm = "AM";
+  if(timeStringArray[0]>=12){
+      finalTimeArray[0] = String(parseInt(timeStringArray[0]) - 12);
+      amOrPm = "PM";
+  }else{
+      finalTimeArray[0] = timeStringArray[0];
+  }
+  if(finalTimeArray[0] === "0"){
+      finalTimeArray[0] = "12";
+  }
+  if(finalTimeArray[0] === "00"){
+      finalTimeArray[0] = "12";
+  }
+  if( (finalTimeArray[0].length === 1) && (parseInt(finalTimeArray[0]) < 10) ){
+      finalTimeArray[0] = "0" + finalTimeArray[0];
+  }
+  finalTimeArray[1] = timeStringArray[1];
+  return finalTimeArray.join(":") + " " + amOrPm;
+}
+
 export const getCookie = (name) => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

@@ -63,7 +63,7 @@ const AdminScreen = (props) => {
             editId: null
         });
     };
-    const addNamefromCategories = (array) => {
+    const addNameFromCategories = (array) => {
         return array.map(translation => {
             const itemsWithId =  state.categories.filter(item => item.id === translation.category);
             if(itemsWithId.length){
@@ -87,11 +87,18 @@ const AdminScreen = (props) => {
             await axios.delete(route+`${id}/`, {responseType: 'json', withCredentials: true, credentials: 'include', headers:{'X-CSRFToken': csrftoken, "Accept-Language": i18n.language}});
             const newArray = state[arrayName].filter((item)=> (item.id !== id));
             if(arrayName === 'categories'){
-                const itemsWithId =  state.categoriesTranslations.filter(item => item.category !== id);
+                const itemsWithOutId =  state.categoriesTranslations.filter(item => item.category !== id);
                 setState(state =>({
                     ...state,
                     categories: newArray,
-                    categoriesTranslations: itemsWithId,
+                    categoriesTranslations: itemsWithOutId,
+                }));
+            }else if(arrayName === 'foodLocations'){
+                const itemsWithOutId =  state.fieldTranslations.filter(item => item.foodlocation !== id);
+                setState(state =>({
+                    ...state,
+                    foodLocations: newArray,
+                    fieldTranslations: itemsWithOutId,
                 }));
             }else{
                 setState(state =>({
@@ -205,7 +212,7 @@ const AdminScreen = (props) => {
                     <CRUDTable title={"Categories"} keysElements={["name"]} rows={state.categories} callEditModal={callEditModal} deleteMethod={deleteItem} route={'/api/v0/categorytags/'} objectPropName={'categories'} />
                 </div>
                 <div style={{maxWidth: "600px", margin: "80px auto 10px auto"}}>
-                    <CRUDTable title={"Category Translations"} keysElements={["category_name", "language", "text"]} rows={addNamefromCategories(state.categoriesTranslations)} callEditModal={callEditModal} deleteMethod={deleteItem} route={'/api/v0/categorytagtranslations/'} objectPropName={'categoriesTranslations'} />
+                    <CRUDTable title={"Category Translations"} keysElements={["category_name", "language", "text"]} rows={addNameFromCategories(state.categoriesTranslations)} callEditModal={callEditModal} deleteMethod={deleteItem} route={'/api/v0/categorytagtranslations/'} objectPropName={'categoriesTranslations'} />
                 </div>
                 <div style={{maxWidth: "600px", margin: "80px auto 10px auto"}}>
                     <CRUDTable title={"Food Locations Translations"} keysElements={[ "food_location", "model_field", "language"]} rows={addNameFromFoodLocations(state.fieldTranslations)} callEditModal={callEditModal} deleteMethod={deleteItem} route={'/api/v0/foodlocationtranslations/'} objectPropName={'fieldTranslations'} />

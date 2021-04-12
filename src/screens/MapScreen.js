@@ -42,7 +42,6 @@ const MapScreen = (props) => {
             outdoorDining: false,
             takeout: false,
             restaurant: false,
-            cashOnly: false,
             acceptsCredit: false,
         },
         foodLocationId: null,
@@ -100,8 +99,9 @@ const MapScreen = (props) => {
     };
 
     const filterFoodLocations = (foodLocations, queryFiltersFlags) => {
+        if(!foodLocations)
+            return foodLocations;
         let filteredFoodLocations = [...foodLocations];
-
         for (let key in queryFiltersFlags){
             if(key === 'acceptsCredit' && queryFiltersFlags[key]){
                 filteredFoodLocations = filteredFoodLocations.filter(item => !item['cash_only']);
@@ -152,42 +152,15 @@ const MapScreen = (props) => {
         }
     });
     const filterClick = (filterValue) => (async () => {
-        const passingFlag = state.queryFiltersFlags[filterValue];
-        //await submitSearch(filterValue)(!passingFlag);
-        let queryFiltersFlags = {...state.queryFiltersFlags};
-        if(filterValue === 'cashOnly' && !passingFlag && state.queryFiltersFlags['acceptsCredit']){
-            queryFiltersFlags = {
-                ...queryFiltersFlags,
-                [filterValue]: !queryFiltersFlags[filterValue],
-                acceptsCredit: false,
-            };
-            setState(state => ({
-                ...state,
-                queryFiltersFlags,
-                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
-            }));
-        } else if(filterValue === 'acceptsCredit' && !passingFlag && state.queryFiltersFlags['cashOnly']){
-            queryFiltersFlags = {
-                ...queryFiltersFlags,
-                [filterValue]: !queryFiltersFlags[filterValue],
-                cashOnly: false,
-            }; 
-            setState(state => ({
-                ...state,
-                queryFiltersFlags,
-                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
-            }));
-        }else{
-            queryFiltersFlags = {
-                ...queryFiltersFlags,
-                [filterValue]: !queryFiltersFlags[filterValue]
-            }
-            setState(state => ({
-                ...state,
-                queryFiltersFlags,
-                queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
-            }));
+        let queryFiltersFlags = {
+            ...state.queryFiltersFlags,
+            [filterValue]: !state.queryFiltersFlags[filterValue]
         }
+        setState(state => ({
+            ...state,
+            queryFiltersFlags,
+            queryLocations: filterFoodLocations(state.locations, queryFiltersFlags),
+        }));
 
     });
     return (
