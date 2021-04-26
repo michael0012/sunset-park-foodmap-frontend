@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import Box from '@material-ui/core/Box';
-import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -71,39 +70,24 @@ const addRestaurantValidator = (t) =>  (( values ) => {
 	}
 	if(!values.description){
 		errors.description = t('Required');
-	} else if(
-		false
-	){
-		errors.description = t('Invalid valid for description');
-	}
+	} 
 	if(!values.address){
 		errors.address = t('Required');
-	} else if(false){
-		errors.address = '';
 	}
 	if(!values.borough){
 		errors.borough = t('Required');
-	}else if(false){
-		errors.borough = '';
-	}if(!values.zip_code){
+	}
+	if(!values.zip_code){
 		errors.zip_code = t('Required');
 	}else if(!/^\d{5}$/i.test(values.zip_code)){
 		errors.zip_code = t('Invalid zip code');
 	}else if( values.zip_code !== '11220' && values.zip_code !== '11232'){
-		errors.zip_code = t('Invalid zip code');
+		errors.zip_code = t('Invalid zip code (only 11220 or 11232)');
 	}
 	if (
 		values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,256}$/i.test(values.email)
 	) {
 		errors.email = t('Invalid email address');
-	}
-	const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-	for(let i=0; i<daysOfWeek.length; i++){
-		if(values[`${daysOfWeek[i]}_open`] !== null && values[`${daysOfWeek[i]}_close`] !== null){
-			if( moment(values[`${daysOfWeek[i]}_open`], 'hh:mm:ss') > moment(values[`${daysOfWeek[i]}_close`], 'hh:mm:ss')){
-				errors[`${daysOfWeek[i]}_close`] = t('Closing time must be greater than opening time.');
-			}
-		}
 	}
 	return errors;
 });
@@ -210,7 +194,7 @@ const AddRestaurantForm = (props) => {
                         <Box className={classes.titleHolder}>
                             <Typography variant="h5" className={classes.title}>{props.title}</Typography>
                         </Box>
-                        <Formik initialValues={initialRestaurantValues} onSubmit={onSubmit} validate={addRestaurantValidator}>
+                        <Formik initialValues={initialRestaurantValues} onSubmit={onSubmit} validate={addRestaurantValidator(t)}>
                             {({
                                 values,
                                 errors,

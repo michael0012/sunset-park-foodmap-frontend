@@ -7,7 +7,6 @@ import i18n from '../i18n';
 import MapSearchBar from '../components/MapSearchBar';
 import HoverLocationInfo from '../components/HoverLocationInfo';
 import MapFilterBar from '../components/MapFilterBar';
-import LocationMarker from '../components/LocationMarker';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -31,7 +30,6 @@ const MapScreen = (props) => {
     const [state, setState] = useState({
         zoom: 15,
         center: [40.647568, -74.004103],
-        locate: "begin",
         locations: null,
         queryLocations: null,
         searched: false,
@@ -90,12 +88,6 @@ const MapScreen = (props) => {
             foodLocationId: foodLocationId,
             foodLocationDrawer: true
         }));
-    };
-    const clickLocateIcon = (value) => {
-        setState({
-            ...state,
-            locate: value
-        });
     };
 
     const filterFoodLocations = (foodLocations, queryFiltersFlags) => {
@@ -176,7 +168,7 @@ const MapScreen = (props) => {
                 )
             }
             
-            <MapSearchBar onSubmit={submitSearch('search')} clickLocateIcon={clickLocateIcon}/>
+            <MapSearchBar onSubmit={submitSearch('search')}/>
             <MapFilterBar filterClick={filterClick} queryFiltersFlags={state.queryFiltersFlags} />
             <MapContainer center={state.center} zoom={state.zoom} scrollWheelZoom={true} style={{height: "100vh", width: "100%", zIndex:0}}>
                 <TileLayer
@@ -227,7 +219,6 @@ const MapScreen = (props) => {
                     )
                     
                 }
-                <LocationMarker locate={state.locate} clickLocateIcon={clickLocateIcon}/>
             </MapContainer>
         </MapBaseScreen>
     );

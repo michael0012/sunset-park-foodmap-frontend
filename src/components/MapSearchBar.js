@@ -3,11 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import GpsFixedOutlinedIcon from '@material-ui/icons/GpsFixedOutlined';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import NavDrawer from './NavDrawer';
@@ -102,10 +100,7 @@ const MapScreenBar = (props) => {
               <CircularProgress style={{width: "22px", height: "22px"}}/>
             )
           }
-          <Divider className={classes.divider} orientation="vertical" />
-          <IconButton color="primary" className={classes.iconButton} aria-label={t("location")} onClick={() => {props.clickLocateIcon("start")}}>
-            <GpsFixedOutlinedIcon /> 
-          </IconButton>
+          
         </Paper>
         <NavDrawer toggleDrawer={toggleNavDrawer} openDrawer={state.openNavDrawer}/>
       </React.Fragment>
